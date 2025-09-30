@@ -1,0 +1,57 @@
+/* Responsive Utility Classes */
+
+/* Base display states */
+.desktop-only,
+.desktop-only[class*="d-"],
+.mobile-only[class*="d-"] {
+    display: none !important;
+}
+
+.mobile-only {
+    display: block !important;
+}
+
+/* Responsive breakpoints */
+@media (min-width: 992px) {
+    .profile-user-info.desktop-only {
+        /* Your styles here */
+        display: flex !important;
+    }
+
+    .desktop-only {
+        display: block !important;
+    }
+    
+    .mobile-only,
+    .mobile-only[class*="d-"] {
+        display: none !important;
+    }
+    
+    /* Display variations for desktop */
+    .desktop-only.d-flex {
+        display: flex !important;
+    }
+    
+    .desktop-only.d-inline {
+        display: inline !important;
+    }
+    
+    .desktop-only.d-inline-block {
+        display: inline-block !important;
+    }
+}
+
+@media (max-width: 991.98px) {
+    /* Display variations for mobile */
+    .mobile-only.d-flex {
+        display: flex !important;
+    }
+    
+    .mobile-only.d-inline {
+        display: inline !important;
+    }
+    
+    .mobile-only.d-inline-block {
+        display: inline-block !important;
+    }
+} 

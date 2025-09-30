@@ -1,0 +1,425 @@
+<?php
+use app\components\Helper;
+use app\models\JobApplications;
+use app\models\Membership;
+use yii\helpers\Html;
+
+$this->title = 'Tutor Dashboard';
+$this->params['breadcrumbs'][] = ['label' => 'Profiles', 'url' => ['index']];
+$this->params['breadcrumbs'][] = $this->title;
+$actionId = Yii::$app->controller->action->id;
+
+// Rank-based apply price (simplified; can be expanded with ApplyCoin model later)
+$baseApplyCoin = !empty($ApplyCoin) ? $ApplyCoin : 20; // Default apply price
+
+// Calculate time since job posting
+$jobPostedTime = strtotime($post->created_at);
+$currentTime = time();
+$timeSincePosted = $currentTime - $jobPostedTime;
+$minutesSincePosted = floor($timeSincePosted / 60);
+
+// User and membership-based logic
+$user = Yii::$app->user->identity;
+$userId = $user->id;
+$region = $region; // Job location
+
+// Fetch user's membership for the job's location
+$membership = Membership::find()
+    ->where(['user_id' => $userId, 'location' => $region])
+    ->andWhere(['>=', 'expiry_date', date('Y-m-d H:i:s')])
+    ->one();
+
+// Determine user's rank (null if no membership)
+$userRank = $membership ? $membership->rank : null;
+
+//echo $region;die;
+
+// Fetch total number of unique ranks for the location
+$maxRank = Membership::find()
+    ->where(['location' => $region])
+    ->andWhere(['>=', 'expiry_date', date('Y-m-d H:i:s')])
+    ->max(new \yii\db\Expression('`rank`'));
+
+
+
+
+// Base timer for non-subscribed users (24 hours = 1440 minutes)
+$baseTimer = 90;
+
+// Calculate timer based on rank
+if ($userRank !== null) {
+    if ($userRank == 1) {
+        // Rank 1 gets immediate access
+        $remainingTime = 0;
+    } else {
+        // Divide 24 hours into segments based on unique ranks
+       $timerPerRank = $baseTimer / max(1, $maxRank);
+       $remainingTime = (int) max(0, ($userRank - 1) * $timerPerRank * 60 - $timeSincePosted);
+
+    }
+} else {
+    // Non-subscribed users wait the full 24 hours
+    $remainingTime = max(0, $baseTimer * 60 - $timeSincePosted);
+}
+
+// Format timer for display
+$timerDisplay = $remainingTime > 0 ? gmdate("H:i:s", $remainingTime) : '';
+
+
+
+// Determine if user can apply
+$canApply = $remainingTime <= 0 ;
+
+// Apply URLs (using is_membership to indicate if user has a membership)
+$applyType = $membership ? 1 : 0;
+?>
+
+<style>
+    .tutor-name {
+        font-size: 2.5rem !important;
+        width: max-content;
+        text-align: center;
+    }
+
+    .tutor-info {
+        display: flex;
+        justify-content: center;
+    }
+
+    .tutor-profile-section {
+        margin-top: 1.5rem;
+    }
+
+    .job-detail-container .col-lg-4 {
+        background: #F7F7F7;
+        padding: 1rem 2rem;
+        border-radius: 10px;
+    }
+
+    @media (max-width: 992px) {
+        .job-details-grid {
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)) !important;
+        }
+
+        .expertTutor_jobDetail_layout {
+            grid-template-columns: 1fr;
+        }
+
+        .expertTutor_jobDetail_meta {
+            flex-direction: column;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+    }
+
+    .expertTutor_jobDetail_meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0;
+    }
+
+    .job-detail-description {
+        margin: 16px 0;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid #e9e8e8;
+    }
+
+    .job-details-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 0.4rem;
+        margin: 2rem 0;
+        padding: 0;
+        background: transparent;
+        border-radius: 0;
+        border: none;
+    }
+
+    .col-lg-5 .job-detail-section {
+        margin-top: 1rem;
+    }
+
+    .job-detail-section {
+        margin-bottom: 0.5rem;
+        padding: 0.65rem;
+        border: 1px solid #e9ecef;
+        border-radius: 8px;
+        background: white;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        transition: all 0.2s ease;
+        border-left: 4px solid var(--primary-color);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+    }
+
+    .job-detail-section h4 {
+        color: #495057;
+        font-size: 0.65rem;
+        font-weight: 600;
+        margin-bottom: 0rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .job-detail-section .value {
+        color: #565f68;
+        font-size: 0.7rem;
+        font-weight: 500;
+    }
+
+    .job-detail-section .value.highlight {
+        color: #09B31A;
+        font-weight: 600;
+    }
+
+    .job-detail-section .value.warning {
+        color: #dc3545;
+    }
+
+    .job-detail-section .value.info {
+        color: #0d6efd;
+    }
+
+    .timer {
+        font-size: 1rem;
+        color: #dc3545;
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 1rem;
+    }
+
+    .btn-subscription {
+        display: block;
+        width: 100%;
+        padding: 0.75rem;
+        background-color: #09B31A;
+        color: white;
+        text-align: center;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 600;
+        margin-bottom: 1rem;
+    }
+
+    .btn-subscription:hover {
+        background-color: #07a016;
+    }
+</style>
+
+<!-- Job Application Section -->
+<section class="job-detail-section mt-4">
+    <div class="container">
+        <div class="job-detail-container">
+            <div class="row">
+                <div class="col-lg-7">
+                    <div class="job-detail">
+                        <h1 class="job-detail-title"><?= Html::encode($post->title) ?></h1>
+                        <!-- Job Details Grid -->
+                        <div class="job-details-grid">
+                            <div class="job-detail-section">
+                                <h4>Pay Schedule</h4>
+                                <div class="value highlight"><?= !empty($post->charge_type) ? Html::encode($post->charge_type) : '-' ?></div>
+                            </div>
+                            <div class="job-detail-section">
+                                <h4>Time Ago</h4>
+                                <div class="value"><?= Yii::$app->formatter->asRelativeTime($post->created_at) ?></div>
+                            </div>
+                            <div class="job-detail-section">
+                                <h4>Level</h4>
+                                <div class="value"><?= !empty($post->level) ? Html::encode(ucfirst($post->level)) : '-' ?></div>
+                            </div>
+                            <div class="job-detail-section">
+                                <h4>Posted By</h4>
+                                <div class="value">
+                                    <?php $postedBy = $post->getPostedBy()->one(); ?>
+                                    <?= $postedBy ? Html::encode(ucfirst($postedBy->username)) : '-' ?>
+                                </div>
+                            </div>
+                            <div class="job-detail-section">
+                                <h4>Role</h4>
+                                <div class="value">Student</div>
+                            </div>
+                            <div class="job-detail-section">
+                                <h4>Subject</h4>
+                                <div class="value">
+                                    <?= ($post->subject != 'other') ? Html::encode(ucfirst($post->subject)) : Html::encode(ucfirst($post->other_subject ?: "-")) ?>
+                                </div>
+                            </div>
+                            <div class="job-detail-section">
+                                <h4>Tutor From</h4>
+                                <div class="value"><?= !empty($post->tutor_from) ? Html::encode(ucfirst($post->tutor_from)) : '-' ?></div>
+                            </div>
+                            <div class="job-detail-section">
+                                <h4>Meeting Option</h4>
+                                <div class="value"><?= !empty($post->meeting_option) ? Html::encode(ucfirst($post->meeting_option)) : '-' ?></div>
+                            </div>
+                            <?php
+                            $totalApplied = JobApplications::find()->where(['job_id' => $post->id])->count();
+                            ?>
+                            <div class="job-detail-section">
+                                <h4>Total Tutor Applied</h4>
+                                <div class="value"><?= !empty($totalApplied) ? Html::encode(ucfirst($totalApplied)) : '-' ?></div>
+                            </div>
+                            <?php if ($post->document): ?>
+                                <div class="job-detail-section">
+                                    <h4>Requirement File</h4>
+                                    <div class="value">
+                                        <a href="<?= Helper::baseUrl($post->document) ?>" target="_blank">View Document</a>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
+                            <div class="job-detail-section">
+                                <h4>Gender Preference</h4>
+                                <div class="value"><?= !empty($post->gender) ? Html::encode($post->gender) : 'None' ?></div>
+                            </div>
+                            <?php if ($post->want == 'online'): ?>
+                                <div class="job-detail-section">
+                                    <h4>Available Online</h4>
+                                    <div class="value highlight">Yes</div>
+                                </div>
+                            <?php endif; ?>
+                            <?php if ($post->want == 'home'): ?>
+                                <div class="job-detail-section">
+                                    <h4>Available for Home Tutoring</h4>
+                                    <div class="value highlight">Yes</div>
+                                </div>
+                            <?php endif; ?>
+                            <?php if ($post->want == 'assigment'): ?>
+                                <div class="job-detail-section">
+                                    <h4>Assignment Work</h4>
+                                    <div class="value highlight">Yes</div>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                        <div class="job-detail-description">
+                            <?php
+                            $desc = $post->details;
+                            $desc = str_replace(
+                                ['Key Responsibilities:', 'Ideal Candidate:'],
+                                ['<strong>Key Responsibilities:</strong>', '<strong>Ideal Candidate:</strong>'],
+                                $desc
+                            );
+                            $desc = nl2br($desc);
+                            $desc = preg_replace('/- (.+?)(?=<br|$)/m', '• $1', $desc);
+                            echo $desc;
+                            ?>
+                        </div>
+                        <div class="expertTutor_jobDetail_meta">
+                            <div class="expertTutor_jobDetail_price">
+                                <span class="expertTutor_jobDetail_currency"><?= Helper::getCurrency() ?></span>
+                                <?= Html::encode($post->budget) ?>
+                            </div>
+                            <div class="expertTutor_jobDetail_location">
+                                <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <g clip-path="url(#clip0_1983_3041)">
+                                        <path d="M21.5801 10.2247C21.5801 17.2247 12.5801 23.2247 12.5801 23.2247C12.5801 23.2247 3.58008 17.2247 3.58008 10.2247C3.58008 7.83775 4.52829 5.54857 6.21612 3.86074C7.90394 2.17291 10.1931 1.2247 12.5801 1.2247C14.967 1.2247 17.2562 2.17291 18.944 3.86074C20.6319 5.54857 21.5801 7.83775 21.5801 10.2247Z" stroke="#09B31A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                        <path d="M12.5801 13.2247C14.2369 13.2247 15.5801 11.8816 15.5801 10.2247C15.5801 8.56785 14.2369 7.2247 12.5801 7.2247C10.9232 7.2247 9.58008 8.56785 9.58008 10.2247C9.58008 11.8816 10.9232 13.2247 12.5801 13.2247Z" stroke="#09B31A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                    </g>
+                                    <defs>
+                                        <clipPath id="clip0_1983_3041">
+                                            <rect width="24" height="24" fill="white" transform="translate(0.580078 0.224701)" />
+                                        </clipPath>
+                                    </defs>
+                                </svg>
+                                <?= Html::encode($post->location) ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <?php
+                $messageApplied = $applied->message ?? false;
+                $callApplied = $applied->call ?? false;
+                $user_slug= Helper::getuserslugfromid($post->getPostedBy()->one()->id);
+                $chatUrl = Helper::baseUrl("peoples/chat?other={$user_slug}&post={$post->id}");
+                $encodedChatUrl = urlencode($chatUrl);
+                $applyUrl = Helper::baseUrl("tutor/apply-now?id={$post->id}&coins={$baseApplyCoin}&url={$encodedChatUrl}");
+                $callApplyUrl = Helper::baseUrl("tutor/apply-now?id={$post->id}&coins={$baseApplyCoin}&url=call");
+                ?>
+                <div class="col-lg-5">
+                    <?php if ($timerDisplay): ?>
+                        <div class="text-center p-4">
+                            <p class="timer">Time Remaining To Apply: <span id="timer"><?= $timerDisplay ?></span></p>
+                        </div>
+                    <?php endif; ?>
+                    <?php if (!$canApply): ?>
+
+                       
+
+                        <div class="text-center bg-white p-4">
+                            <p>
+                                
+                                    Subscribe to apply early with premium coins or wait until the timer expires to apply.
+                            </p>
+                            <a href="<?= Helper::baseUrl('tutor/buy-membership') ?>" class="btn-subscription">Subscribe Now</a>
+                        </div>
+                    <?php else: ?>
+                        <div class="job-actions">
+                            <a href="javascript:void(0);" onclick="<?php
+                                if ($messageApplied) {
+                                    echo "window.location.href = '{$chatUrl}';";
+                                } else {
+                                    $confirmMessage = "Your {$baseApplyCoin} coins will be deducted for message service. Continue?";
+                                    echo "if (confirm('{$confirmMessage}')) { window.location.href = '{$applyUrl}'; }";
+                                }
+                            ?>" class="btn-message">
+                                Message
+                                <div class="coin-info">
+                                    <?= $messageApplied ? 'Applied (Free)' : 'Coin Need ' . $baseApplyCoin ?>
+                                    <img src="<?= Helper::baseUrl() ?>/custom/images/icons/coin.png" alt="Coin" class="coin-icon">
+                                </div>
+                            </a>
+                            <?php if ($post->call_option != 0): ?>
+                                <a href="javascript:void(0);" onclick="<?php
+                                    if ($callApplied) {
+                                        echo "window.location.href = '{$callApplyUrl}';";
+                                    } else {
+                                        $confirmMessage = "Your {$baseApplyCoin} coins will be deducted for call service. Continue?";
+                                        echo "if (confirm('{$confirmMessage}')) { window.location.href = '{$callApplyUrl}'; }";
+                                    }
+                                ?>" class="btn-call">
+                                    View Number
+                                    <div class="coin-info">
+                                        <?= $callApplied ? 'Applied (Free)' : 'Coin Need ' . $baseApplyCoin ?>
+                                        <img src="<?= Helper::baseUrl() ?>/custom/images/icons/coin.png" alt="Coin" class="coin-icon">
+                                    </div>
+                                </a>
+                            <?php endif; ?>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- JavaScript for Timer -->
+<script>
+    function startTimer(duration, display) {
+        let timer = duration;
+        let interval = setInterval(function () {
+            let hours = Math.floor(timer / 3600);
+            let minutes = Math.floor((timer % 3600) / 60);
+            let seconds = timer % 60;
+            hours = hours < 10 ? "0" + hours : hours;
+            minutes = minutes < 10 ? "0" + minutes : minutes;
+            seconds = seconds < 10 ? "0" + seconds : seconds;
+            display.textContent = hours + ":" + minutes + ":" + seconds;
+
+            if (--timer < 0) {
+                clearInterval(interval);
+                display.textContent = "00:00:00";
+                window.location.reload(); // Refresh to show apply buttons or free status
+            }
+        }, 1000);
+    }
+
+    <?php if ($remainingTime > 0): ?>
+        window.onload = function () {
+            let timerDisplay = document.getElementById("timer");
+            startTimer(<?= $remainingTime ?>, timerDisplay);
+        };
+    <?php endif; ?>
+</script>

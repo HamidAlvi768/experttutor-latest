@@ -1,0 +1,104 @@
+# Yii2 Framework
+/vendor/
+/node_modules/
+
+# Runtime directories
+/runtime/
+/web/assets/
+/web/runtime/
+
+# Cache and logs
+*.log
+*.cache
+/logs/
+/cache/
+/debug/
+
+# Database
+*.sql
+*.db
+*.sqlite
+
+# Configuration files with sensitive data
+/config/db.php
+/config/params.php
+/config/test_db.php
+/config/test.php
+/config/web.php
+/config/console.php
+
+# Environment files
+.env
+.env.local
+.env.production
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.backup
+*~
+
+# Upload directories (keep structure but ignore contents)
+/uploads/*
+!/uploads/.gitkeep
+/uploads/avatars/*
+!/uploads/avatars/.gitkeep
+
+# Test output
+/tests/_output/
+/tests/_data/*.sqlite
+
+# Composer
+composer.phar
+/vendor/
+
+# Node.js
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# PHP specific
+*.php~
+*.php.bak
+error_log
+php_errors.log
+
+# Custom application specific
+/custom/plugins/node_modules/
+/custom/js/node_modules/
+
+# Docker
+.dockerignore
+
+# Vagrant
+.vagrant/
+
+# Backup files
+*.orig
+*.rej
+
+# Documentation build
+/docs/build/
+
+# Coverage reports
+/coverage/
+*.coverage

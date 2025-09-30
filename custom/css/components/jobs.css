@@ -1,0 +1,231 @@
+/* Jobs Page Styles */
+:root {
+    --primary-color: #564FFD;
+    --text-dark: #333333;
+    --text-light: #5f666e;
+    --success-color: #00AB3A;
+    --border-color: #E7E7E7;
+    --bg-light: #F8F9FF;
+    --bg-gray: #f5f5f763;
+    --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --transition: all 0.3s ease;
+}
+
+.jobs-page {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--bg-gray);
+    color: var(--text-dark);
+}
+
+/* Combined header and hero background */
+.jobs-page .tutor-hero-section {
+    margin-top: -50px; /* Pull up to cover header */
+    padding-top: 80px; /* Add padding to compensate for header height */
+    position: relative;
+    z-index: 1;
+}
+
+/* Position the header within the hero section */
+.jobs-page .tutor-expert-header {
+    position: relative;
+    z-index: 2;
+    padding: 20px 15px;
+    background: transparent;
+}
+
+/* Main content area background */
+.jobs-navigation,
+.jobs-listing {
+    background-color: var(--bg-gray);
+}
+
+/* Jobs Navigation */
+.jobs-navigation {
+    padding: 20px 0;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 5px;
+}
+
+.jobs-tabs {
+    display: flex;
+    gap: 32px;
+    margin-bottom: 12px;
+}
+
+.tab-link {
+    color: var(--text-light);
+    text-decoration: none;
+    font-weight: 500;
+    padding-bottom: 8px;
+    position: relative;
+}
+
+.tab-link.active {
+    color: var(--text-dark);
+}
+
+.tab-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: transparent;
+}
+
+.jobs-description {
+    color: var(--text-light);
+    font-size: 0.9rem;
+    margin: 0;
+    margin-bottom: 2rem;
+}
+
+/* Jobs Listing */
+.jobs-listing {
+    padding: 20px 0;
+}
+
+@media (max-width: 991.98px) {
+    .jobs-listing {
+        padding: 10px 0;
+    }
+}
+
+.job-card {
+    background: white;
+    border-radius: 12px;
+    margin-bottom: 24px;
+    transition: var(--transition);
+    border: 1px solid var(--border-color);
+}
+
+.job-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--card-shadow);
+}
+
+.job-content {
+    padding: 5px 24px;
+    display: flex;
+    flex-direction: column;
+}
+
+.job-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 6px;
+}
+
+.job-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin: 0;
+    flex: 1;
+    padding-right: 20px;
+}
+
+.job-amount {
+    display: flex;
+    align-items: baseline;
+    white-space: nowrap;
+}
+
+.amount-value {
+    font-size: clamp(0.9rem, 2.5vw, 1.2rem);
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+.currencyDisplay{
+    font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+}
+
+.amount-currency {
+    color: var(--text-dark);
+    font-weight: 600;
+    margin-left: 2px;
+    font-size: clamp(0.85rem, 2.2vw, 1.1rem);
+}
+
+.job-description {
+    color: var(--text-light);
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin-bottom: 0px;
+}
+
+.btn-apply {
+    background-color: var(--success-color);
+    color: white;
+    border: none;
+    padding: 10px 32px;
+    border-radius: 4px;
+    font-weight: 500;
+    font-size: clamp(0.85rem, 2.5vw, 1.15rem);
+    cursor: pointer;
+    transition: var(--transition);
+    display: inline-block;
+    text-decoration: none;
+    text-align: center;
+    width: min-content;
+    align-self: flex-end;
+}
+
+@media (max-width: 992px) {
+    .btn-apply {
+        padding: 8px 12px;
+    }
+}
+
+@media (max-width: 768px) {
+    .btn-apply {
+        padding: 7px 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .btn-apply {
+        padding: 6px 7px;
+    }
+}
+
+.btn-apply:hover {
+    background-color: #008c2f;
+    transform: translateY(-2px);
+    color: white;
+    text-decoration: none;
+}
+
+/* Responsive Styles */
+@media (max-width: 992px) {
+    .tutor-name {
+        font-size: 3rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .tutor-name {
+        font-size: 2.5rem;
+    }
+
+    .jobs-tabs {
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+
+    .job-content {
+        padding: 20px;
+    }
+
+    .job-title {
+        font-size: 1.1rem;
+    }
+
+    .job-description {
+        font-size: 0.85rem;
+        margin-bottom: 0.5rem;
+    }
+} 

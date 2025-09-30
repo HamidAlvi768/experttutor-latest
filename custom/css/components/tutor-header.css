@@ -1,0 +1,332 @@
+/* Tutor Header Styles */
+:root {
+    --tutor-primary-color: #564FFD;
+    --tutor-text-dark: #1B1B3F;
+    --tutor-text-light: #6F6F6F;
+    --tutor-bg-light: #F8F8F8;
+    --tutor-border-color: #E7E7E7;
+}
+
+.tutor-expert-header {
+    padding: 16px 0;
+    margin: 24px 0 40px;
+    margin-bottom: 0;
+    position: relative;
+    z-index: 1100;
+}
+
+.tutor-nav-content {
+    backdrop-filter: blur(10px);
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 16px 32px;
+    border-radius: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    padding-left: 0px;
+}
+
+.tutor-nav-left {
+    display: flex;
+    align-items: center;
+    gap: 48px;
+}
+
+.tutor-logo {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    padding: 8px 0;
+}
+
+.tutor-logo-image {
+    height: 25px;
+    width: auto;
+    object-fit: contain;
+}
+
+/* Navigation Links */
+.tutor-nav-links-container {
+    display: flex;
+    align-items: center;
+    gap: 48px;
+}
+
+.tutor-nav-links ul {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.tutor-nav-links a {
+    text-decoration: none;
+    color: var(--tutor-text-dark);
+    font-weight: 500;
+    font-size: 15px;
+    padding: 8px 0;
+    transition: color 0.3s ease;
+    position: relative;
+}
+
+.tutor-nav-links a:hover {
+    color: var(--tutor-primary-color);
+}
+
+/* Dropdown Styles */
+.dropdown-nav {
+    position: relative;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    min-width: 200px;
+    padding: 8px 15px;
+}
+
+.dropdown-nav:hover .dropdown-menu {
+    display: block;
+}
+
+.dropdown-item {
+    display: block;
+    padding: 8px 16px;
+    color: var(--tutor-text-dark);
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.dropdown-item:hover {
+    background-color: var(--tutor-bg-light);
+    color: var(--tutor-primary-color);
+}
+
+/* User Info Styles */
+.tutor-user-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    padding: 6px 12px;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+}
+
+.tutor-user-info:hover {
+    background-color: rgba(86, 79, 253, 0.05);
+}
+
+.tutor-user-pic {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.tutor-user-name {
+    font-weight: 500;
+    font-size: 15px;
+    color: var(--tutor-text-dark);
+}
+
+/* Mobile Navigation Styles */
+.tutor-mobile-toggle {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    margin-left: auto;
+    position: relative;
+    z-index: 1001;
+}
+
+.hamburger-line {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background-color: var(--tutor-text-dark);
+    margin: 5px 0;
+    transition: all 0.3s ease;
+}
+
+.tutor-nav-close {
+    display: none;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    align-items: center;
+    justify-content: center;
+    color: var(--tutor-text-dark);
+    font-size: 24px;
+    z-index: 1021;
+}
+
+.tutor-mobile-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease;
+}
+
+/* Mobile Styles */
+@media (max-width: 991.98px) {
+    .tutor-mobile-toggle {
+        display: block;
+    }
+
+    .tutor-nav-content {
+        padding: 12px 20px;
+        justify-content: space-around;
+    }
+
+    .tutor-nav-left {
+        width: 100%;
+    }
+
+    .tutor-nav-links-container {
+        position: fixed;
+        top: 0;
+        right: -300px;
+        width: 200px;
+        height: 100vh;
+        background: white;
+        padding: 80px 20px 20px;
+        z-index: 1120;
+        flex-direction: column;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateX(100%);
+        transition: all 0.3s ease;
+        overflow-y: auto;
+        display: none;
+        padding-left: 0px;
+    }
+
+    body.mobile-menu-active .tutor-nav-links-container {
+        right: 0;
+        opacity: 1;
+        visibility: visible;
+        transform: translateX(0);
+        display: flex;
+    }
+
+    .tutor-nav-links ul {
+        flex-direction: column;
+        gap: 10px;
+        width: 100%;
+    }
+
+    .tutor-nav-links a {
+        display: block;
+        padding: 12px 0;
+        width: 100%;
+        border-bottom: 1px solid var(--tutor-border-color);
+    }
+
+    .dropdown-menu {
+        position: static;
+        box-shadow: none;
+        display: none;
+        padding-left: 20px;
+    }
+
+    .dropdown-nav.active .dropdown-menu {
+        display: block;
+    }
+
+    /* Active States */
+    body.mobile-menu-active {
+        overflow: hidden;
+    }
+
+    body.mobile-menu-active .tutor-nav-close {
+        display: flex;
+    }
+
+    body.mobile-menu-active .tutor-mobile-overlay {
+        display: block;
+        opacity: 1;
+        visibility: visible;
+    }
+
+    body.mobile-menu-active .hamburger-line:nth-child(1) {
+        transform: translateY(7px) rotate(45deg);
+    }
+
+    body.mobile-menu-active .hamburger-line:nth-child(2) {
+        opacity: 0;
+    }
+
+    body.mobile-menu-active .hamburger-line:nth-child(3) {
+        transform: translateY(-7px) rotate(-45deg);
+    }
+
+    .tutor-user-info.desktop-only {
+        display: none;
+    }
+
+    .tutor-user-info.mobile-only {
+        display: flex;
+        padding: 20px 0;
+        border-top: 1px solid var(--tutor-border-color);
+        margin-top: 20px;
+        width: 100%;
+    }
+
+    .tutor-nav-close {
+        z-index: 1121;
+    }
+}
+
+/* Desktop-only styles */
+@media (min-width: 992px) {
+    .mobile-only {
+        display: none !important;
+    }
+
+    .tutor-nav-links-container {
+        position: relative;
+        transform: none !important;
+        padding: 0;
+        height: auto;
+        background: none;
+        overflow: visible;
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
+
+    .tutor-mobile-toggle,
+    .tutor-nav-close,
+    .tutor-mobile-overlay {
+        display: none !important;
+    }
+}
+
+.expertTutor_jobDetail_currency {
+    font-weight: 500;
+    color: #564FFD;
+    font-size: 1.2rem;
+    margin-right: 0.3rem;
+} 

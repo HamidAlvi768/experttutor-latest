@@ -1,0 +1,49 @@
+<?php
+
+namespace app\controllers\api;
+
+use yii\rest\Controller;
+use Yii;
+use yii\web\Response;
+use app\models\Manageusers;
+use app\models\ManageusersSearch as ModelsManageusersSearch;
+use app\components\JwtHelper;
+
+
+class AdminController extends Controller
+{
+    public function behaviors()
+    {
+        $behaviors = parent::behaviors();
+        $behaviors['contentNegotiator']['formats']['application/json'] = Response::FORMAT_JSON;
+        return $behaviors;
+    }
+
+    public function actionUsers()
+    {
+        $JWT_auth = JwtHelper::getUserFromToken();
+
+        if (!$JWT_auth) {
+            Yii::$app->response->statusCode = 401;
+            return ['success' => false, 'message' => 'Unauthorized'];
+        }
+
+
+        $role = '';
+        $searchModel = new ModelsManageusersSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams, $role);
+
+        $users = $dataProvider->getModels();
+
+        return [
+            'success' => true,
+            'pagination' => [
+                'page' => $dataProvider->pagination->getPage() + 1,
+                'pageSize' => $dataProvider->pagination->getPageSize(),
+                'totalCount' => $dataProvider->getTotalCount(),
+            ],
+            'data' => $users,
+        ];
+    }
+
+}

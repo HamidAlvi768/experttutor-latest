@@ -1,0 +1,224 @@
+/* Buy Coin Page Styles */
+:root {
+    --primary-color: #564FFD;
+    --text-dark: #1B1B3F;
+    --text-light: #6c757d;
+    --transition: all 0.3s ease;
+}
+
+.buy-coin-page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Poppins', sans-serif;
+    position: relative;
+    overflow-x: hidden;
+}
+
+.buy-coin-page .tutor-expert-header{
+    padding: 10px 0;
+}
+
+/* Top Header */
+.top-header {
+    background-color: white;
+    padding: 8px 0;
+    position: relative;
+    z-index: 10;
+    border-bottom: 1px solid #eee;
+}
+
+/* Header Container */
+.header-container {
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    border-radius: 16px;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
+.top-link {
+    color: var(--text-dark);
+    text-decoration: none;
+    font-size: 14px;
+    padding: 0 15px;
+    transition: var(--transition);
+}
+
+.top-link:hover {
+    color: var(--primary-color);
+}
+
+/* Custom logo for buy-coin page */
+.buy-coin-header .logo-image {
+    content: url('../../images/profile-logo.png');
+    height: 26px !important;
+}
+
+/* Hero Section */
+.buy-coin-hero {
+    position: absolute;
+    top: 40px; /* Height of top header */
+    left: 0;
+    right: 0;
+    bottom: 80px; /* Height of footer */
+    width: 100%;
+    background-image: url('../../images/hero-image.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: 1;
+}
+
+.buy-coin-hero .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.85);
+}
+
+/* Main Content Wrapper */
+.main-content-wrapper {
+    position: relative;
+    z-index: 2;
+    min-height: calc(100vh - 120px); /* Subtract top header and footer height */
+    display: flex;
+    flex-direction: column;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    color: var(--text-dark);
+    max-width: 800px;
+    margin: 0 auto;
+    padding-top: 2rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Add margin to hero content container */
+.hero-content-container {
+    margin-bottom: 10rem;
+}
+
+.hero-title {
+    font-size: 4rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    gap: 0px;
+}
+
+.hero-title .main-title {
+    white-space: nowrap;
+    font-size: 4.5rem;
+    letter-spacing: 2px;
+}
+
+.hero-title .highlight {
+    color: var(--primary-color);
+}
+
+.hero-title .subtitle {
+    font-size: 2rem;
+    margin-top: 10px;
+    font-weight: 400;
+    letter-spacing: 2px;
+    text-align: center;
+}
+
+.btn-buy-coins {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 15px 100px;
+    font-size: 1.2rem;
+    font-weight: 400;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: var(--transition);
+    margin-bottom: 20px;
+}
+
+.btn-buy-coins:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 15px rgba(86, 79, 253, 0.3);
+}
+
+.payment-methods {
+    text-align: center;
+}
+
+.payment-text {
+    font-size: 1rem;
+    color: var(--text-dark);
+    margin-bottom: 20px;
+    opacity: 0.8;
+}
+
+.payment-logos {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.payment-logos img {
+    height: 60px;
+    width: auto;
+    opacity: 0.9;
+    transition: var(--transition);
+}
+
+.payment-logos img:hover {
+    opacity: 1;
+    transform: translateY(-2px);
+}
+
+/* Footer positioning */
+footer {
+    position: relative;
+    z-index: 2;
+}
+
+/* Responsive Styles */
+@media (max-width: 992px) {
+    .hero-title .main-title {
+        font-size: 3.5rem;
+    }
+    
+    .hero-title .subtitle {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-title .main-title {
+        font-size: 2.5rem;
+        white-space: normal;
+    }
+    
+    .hero-title .subtitle {
+        font-size: 1.8rem;
+    }
+    
+    .btn-buy-coins {
+        padding: 12px 40px;
+        font-size: 1rem;
+    }
+    
+    .payment-logos {
+        gap: 20px;
+    }
+    
+    .payment-logos img {
+        height: 25px;
+    }
+} 
